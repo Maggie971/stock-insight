@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-insight
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stock-insight
+  template:
+    metadata:
+      labels:
+        app: stock-insight
+    spec:
+      containers:
+      - name: stock-insight
+        image: us-central1-docker.pkg.dev/luminous-return-441222-f4/tradeseer-repo/tradeseer-ai@sha256:5e6b602405ed11a745b46218e60fa861cd7cdb3ae00087b419e854080db8b22d
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5173
+        
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/google/key.json
+        
+        envFrom:
+        - secretRef:
+            name: stock-insight-secrets
+        
+        volumeMounts:
+        - name: gcp-key
+          mountPath: /var/secrets/google
+          readOnly: true
+        
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+        
+        # ===== 暂时注释掉health probes =====
+        # livenessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 5173
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 10
+        
+        # readinessProbe:
+        #   httpGet:
+        #     path: /
+        #     port: 5173
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 10
+      
+      volumes:
+      - name: gcp-key
+        secret:
+          secretName: gcp-sa-key

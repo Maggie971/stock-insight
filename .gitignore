@@ -1,0 +1,28 @@
+# Ignore virtual environment
+.venv/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# macOS system files
+.DS_Store
+
+# VS Code settings (if you're using VS Code)
+.vscode/
+
+# Environment variable files
+.env
+*.env
+
+# Test, coverage, and logs
+*.log
+.coverage
+htmlcov/
+.cache/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/

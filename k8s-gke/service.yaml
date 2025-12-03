@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: stock-insight-service
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: stock-insight
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5173
