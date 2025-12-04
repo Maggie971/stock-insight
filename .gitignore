@@ -26,3 +26,7 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+
+.env
+sa-key.json
+k8s-gke/secret.yaml

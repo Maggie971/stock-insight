@@ -95,7 +95,7 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ env.PROJECT_ID }}
           export_default_credentials: true
-
+      
       - name: Install gke-gcloud-auth-plugin
         run: |
           echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -115,6 +115,12 @@ jobs:
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} \
             --zone ${{ env.GKE_ZONE }} \
             --project ${{ env.PROJECT_ID }}
+      
+      - name: Create Kubernetes Secrets from template
+        run: |
+          sed -e "s/\${GOOGLE_API_KEY}/${{ secrets.GOOGLE_API_KEY }}/g" \
+              -e "s/\${GOOGLE_CLOUD_PROJECT}/${{ env.PROJECT_ID }}/g" \
+              k8s-gke/secret.yaml | kubectl apply -f -
       
       - name: Deploy to Kubernetes
         run: |
